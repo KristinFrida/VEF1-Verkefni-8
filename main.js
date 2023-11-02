@@ -1,5 +1,5 @@
 import { formatPrice } from './lib/helpers.js';
-import { createCartLine, showCartContent } from './lib/ui.js';
+import { createCartLine, showCartContent} from './lib/ui.js';
 
 /**
  * @typedef {Object} Product
@@ -39,15 +39,25 @@ const products = [
 function addProductToCart(product, quantity) {
   const cartTableElement = document.querySelector('.cart table');
   const cartTableBodyElement = document.querySelector('.cart table tbody');
+
+  
   
   if (!cartTableBodyElement) {
     console.warn('fann ekki .cart table');
     return;
   }
-  
-  // TODO hér þarf að athuga hvort lína fyrir vöruna sé þegar til
-  const cartLine = createCartLine(product, quantity);
-  cartTableBodyElement.appendChild(cartLine);
+
+  const ThecartLine = cartTableBodyElement.querySelector(
+    `tr[data-product-id="${product.id}"]`,
+  );
+
+  if(!ThecartLine){
+    const cartLine = createCartLine(product, quantity);
+    cartTableBodyElement.appendChild(cartLine);
+  }
+  else{
+    UpdateCartLine(product, quantity, ThecartLine);
+  }
 
   // Sýna efni körfu
   showCartContent(true);
@@ -55,6 +65,21 @@ function addProductToCart(product, quantity) {
   // TODO sýna/uppfæra samtölu körfu
   updateCartTotal(cartTableElement);
 }
+
+
+
+function UpdateCartLine(product, quantity, cartLine){
+  const quantityOfLine = cartLine.getAttribute('data-quantity')
+
+  const quantityNow = parseInt(quantityOfLine, 10);
+  const updatedQuantity = quantity + quantityNow;
+
+  cartLine.setAttribute('data-quantity', updatedQuantity.toString());
+  cartLine.querySelector('.foo').textContent = updatedQuantity.toString()
+  cartLine.querySelector('.total').textContent = (formatPrice(updatedQuantity*product.price))
+}
+
+
 
 function submitHandler(event) {
   // Komum í veg fyrir að form submiti
@@ -85,6 +110,7 @@ function submitHandler(event) {
   }
   const quantity = Number.parseInt(quantityInputElement.value);
 
+
   // Bætum vöru í körfu (hér væri gott að bæta við athugun á því að varan sé til)
   addProductToCart(product, quantity);
 }
@@ -96,9 +122,6 @@ function updateCartTotal(cartTableElement) {
     const p = Number.parseInt(line.dataset.price);
     const q = Number.parseInt(line.dataset.quantity);
     totalAmount += p*q;
-
-    const cartTotal = document.querySelector('.total');
-    cartTotal.textContent = formatPrice(p*q);
   }
 
   const cartTotal = cartTableElement.querySelector('tfoot .price');
