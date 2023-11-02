@@ -1,3 +1,4 @@
+import { formatPrice } from './lib/helpers.js';
 import { createCartLine, showCartContent } from './lib/ui.js';
 
 /**
@@ -36,6 +37,7 @@ const products = [
  * @param {number} quantity 
  */
 function addProductToCart(product, quantity) {
+  const cartTableElement = document.querySelector('.cart table');
   const cartTableBodyElement = document.querySelector('.cart table tbody');
   
   if (!cartTableBodyElement) {
@@ -51,6 +53,7 @@ function addProductToCart(product, quantity) {
   showCartContent(true);
 
   // TODO sýna/uppfæra samtölu körfu
+  updateCartTotal(cartTableElement);
 }
 
 function submitHandler(event) {
@@ -72,10 +75,35 @@ function submitHandler(event) {
 
   // TODO hér þarf að finna fjölda sem á að bæta við körfu með því að athuga
   // á input
-  const quantity = 1;
+  const quantityInputElement = parent.querySelector(
+    'input'
+  );
+
+  if (!quantityInputElement){
+    console.warn('gat ekki fundið fjölda input');
+    return;
+  }
+  const quantity = Number.parseInt(quantityInputElement.value);
 
   // Bætum vöru í körfu (hér væri gott að bæta við athugun á því að varan sé til)
   addProductToCart(product, quantity);
+}
+
+function updateCartTotal(cartTableElement) {
+  const cartBody = cartTableElement.querySelectorAll('tbody tr');
+  let totalAmount = 0;
+  for (const line of cartBody) {
+    const p = Number.parseInt(line.dataset.price);
+    const q = Number.parseInt(line.dataset.quantity);
+    totalAmount += p*q;
+
+    const cartTotal = document.querySelector('.total');
+    cartTotal.textContent = formatPrice(p*q);
+  }
+
+  const cartTotal = cartTableElement.querySelector('tfoot .price');
+  console.log(cartTotal)
+  cartTotal.textContent = formatPrice(totalAmount);
 }
 
 // Finna öll form með class="add"
