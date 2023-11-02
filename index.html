@@ -54,7 +54,7 @@
             <td>
               <form class="add" method="post">
                 <label>Fjöldi: <input type="number" value="1" min="0" max="99"></label>
-                <button>Bæta við</button>
+                <button id="addButton">Bæta við</button>
               </form>
             </td>
           </tr>
@@ -69,7 +69,7 @@
         <div class="cart-content hidden">eitthvað í körfu.</div>
       </div>
 
-      <table class="table cart-table">
+      <table class="tableToggle" style="display: none;">
         <thead>
           <tr>
             <th>Heiti</th>
@@ -93,19 +93,19 @@
       </div>
 
       <form method="post">
-        <div class="form-field">
+        <div class="form-field" style="display: none;">
           <label for="name">Nafn:</label>
           <input type="text" name="name" id="name">
         </div>
-        <div class="form-field">
+        <div class="form-field" style="display: none;">
           <label for="address">Heimilisfang:</label>
           <input type="text" name="address" id="address">
         </div>
-        <button>Ganga frá kaupum</button>
+        <button id="toggleButton">Ganga frá kaupum</button>
       </form>
 
     </section>
-    <section class="receipt">
+    <section class="receipt" style="display: none;">
       <h2>Kvittun</h2>
       <p>Takk fyrir að versla hjá okkur!</p>
       <p><a href=".">Kaupa meira</a>.</p>

@@ -139,3 +139,35 @@ for (const form of Array.from(addToCartForms)) {
 }
 
 // TODO bæta við event handler á form sem submittar pöntun
+document.addEventListener("DOMContentLoaded", function() {
+
+  
+  let state = 'form';
+  const toggleButton = document.getElementById("toggleButton");
+  const formFields = document.querySelectorAll('.form-field');
+  const receiptSection = document.querySelector('.receipt');
+
+
+  toggleButton.addEventListener("click", function(event) {
+
+    event.preventDefault();
+
+    if (state === 'form') {
+
+      formFields.forEach(function(field) {
+        field.style.display = "block";
+      });
+      state = 'receipt';
+    } else if (state === 'receipt') {
+
+      receiptSection.style.display = "block";
+      toggleButton.style.display = "none";
+      formFields.forEach(function(field) {
+        field.style.display = "none";
+      });
+    }
+  });
+});
+
+// karfan að vera tóm í  hvert skiptið sem er refreshað síðunni
+localStorage.clear();
